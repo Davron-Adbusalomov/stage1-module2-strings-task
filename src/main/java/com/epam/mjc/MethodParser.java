@@ -1,5 +1,10 @@
 package com.epam.mjc;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.StringTokenizer;
+
 public class MethodParser {
 
     /**
@@ -20,6 +25,53 @@ public class MethodParser {
      * @return {@link MethodSignature} object filled with parsed values from source string
      */
     public MethodSignature parseFunction(String signatureString) {
-        throw new UnsupportedOperationException("You should implement this method.");
+        StringTokenizer stringTokenizer = new StringTokenizer(signatureString, " (,)");
+
+        String accessModifier = "";
+        String returnType = "";
+        String methodName = "";
+
+        if (stringTokenizer.hasMoreTokens()){
+            accessModifier = stringTokenizer.nextToken();
+            if (accessModifier.startsWith("S")){
+                returnType =accessModifier;
+                accessModifier=null;
+
+            }
+        }
+
+        if (stringTokenizer.hasMoreTokens()){
+            returnType = stringTokenizer.nextToken();
+        }
+
+        if (stringTokenizer.hasMoreTokens()){
+            methodName = stringTokenizer.nextToken();
+        }
+
+        List<MethodSignature.Argument> argumentList = new ArrayList<>();
+        if (stringTokenizer.hasMoreTokens()){
+            MethodSignature.Argument argument = new MethodSignature.Argument(stringTokenizer.nextToken(), stringTokenizer.nextToken());
+            argumentList.add(argument);
+        }
+
+        if (stringTokenizer.hasMoreTokens()){
+            if (stringTokenizer.hasMoreTokens()) {
+                MethodSignature.Argument argument = new MethodSignature.Argument(stringTokenizer.nextToken(), stringTokenizer.nextToken());
+                argumentList.add(argument);
+            }
+        }
+
+        if (stringTokenizer.hasMoreTokens()){
+            MethodSignature.Argument argument = new MethodSignature.Argument(stringTokenizer.nextToken(), stringTokenizer.nextToken());
+            argumentList.add(argument);
+        }
+
+        MethodSignature methodSignature = new MethodSignature(methodName, argumentList);
+        methodSignature.setAccessModifier(accessModifier);
+        methodSignature.setReturnType(returnType);
+
+        return methodSignature;
+
+        //throw new UnsupportedOperationException("You should implement this method.");
     }
 }
